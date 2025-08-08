@@ -438,14 +438,18 @@ class SendP2P {
     }
 
     async sendFileData(dataChannel, file, fileInfo) {
-        const chunkSize = 16384;
+        const chunkSize = 64 * 1024;
+        const maxBufferedAmount = 8 * 1024 * 1024;
         let sentBytes = 0;
         const startTime = Date.now();
         try {
             for (let offset = 0; offset < file.size; offset += chunkSize) {
                 const chunk = file.slice(offset, offset + chunkSize);
                 const arrayBuffer = await chunk.arrayBuffer();
-                while (dataChannel.bufferedAmount > chunkSize * 8) {
+                while (dataChannel.bufferedAmount > maxBufferedAmount) {
+                    if (dataChannel.readyState !== 'open') {
+                        throw new Error("DataChannel closed during transfer.");
+                    }
                     await new Promise(resolve => setTimeout(resolve, 10));
                 }
                 dataChannel.send(arrayBuffer);
@@ -454,7 +458,7 @@ class SendP2P {
                 const elapsed = (Date.now() - startTime) / 1000;
                 const speed = sentBytes / elapsed;
                 this.updateProgress(progress, speed);
-                if (offset % (chunkSize * 10) === 0) {
+                if ((offset / chunkSize) % 10 === 0) {
                     await new Promise(resolve => setTimeout(resolve, 1));
                 }
             }
@@ -463,7 +467,6 @@ class SendP2P {
                 this.hideProgressModal();
                 this.showToast('File sent successfully!', 'success');
             }, 500);
-
         } catch (error) {
             this.showToast('File transfer failed', 'error');
             this.hideProgressModal();
