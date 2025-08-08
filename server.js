@@ -253,18 +253,12 @@ function handleMessage(sender, message) {
 }
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-    const interfaces = os.networkInterfaces();
-    console.log('Server running on:');
-    console.log(`  Local: http://localhost:${PORT}`);
-    Object.entries(interfaces).forEach(([name, nets]) => {
-        nets.forEach(net => {
-            if (net.family === 'IPv4' && !net.internal) {
-                console.log(`  Network: http://${net.address}:${PORT}`);
-            }
-        });
-    });
+server.listen(PORT, () => {
+    console.log(`Server running on: http://localhost:${PORT}`);
 });
+
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => { });
 
 process.on('SIGTERM', () => {
     server.close(() => {
