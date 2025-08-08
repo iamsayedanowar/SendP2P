@@ -1,0 +1,525 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Outfit", sans-serif;
+    scroll-behavior: smooth;
+    font-weight: 400;
+    letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: "Outfit", sans-serif;
+    scroll-behavior: smooth;
+    font-weight: 400;
+    letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
+    background-color: #000000;
+    color: var(--text-primary);
+    height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    max-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1A1A1A;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: row-reverse;
+}
+
+#device-name {
+    padding: 0.5rem 1rem;
+    border: 1px solid #FFFFFF20;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background: #1a1a1a;
+    transition: border-color 0.3s;
+    color: #FFFFFF;
+}
+
+#device-name:focus {
+    outline: none;
+    border-color: #0066FF;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #FF9500;
+    animation: pulse 2s infinite;
+}
+
+.status.connecting .status-dot {
+    background-color: #FF9500;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+.status.connected .status-dot {
+    background-color: #34CB5A;
+    animation: none;
+}
+
+.status.disconnected .status-dot {
+    background-color: #FF3B30;
+}
+
+.status-text {
+    font-size: 0.875rem;
+    color: #8A8A8F;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 6rem 2rem;
+    background: #1A1A1A;
+    border-radius: 1rem;
+}
+
+.devices-exclamation {
+    width: 128px;
+    height: auto;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #FFFFFF;
+}
+
+.empty-state p {
+    color: #8A8A8F;
+    margin-bottom: 2rem;
+}
+
+.tips p {
+    font-size: 0.875rem;
+    color: #8A8A8F;
+    background: #000000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    display: inline-block;
+}
+
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.device-card {
+    background: #1A1A1A;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    transition: 0.3s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.device-card:hover {
+    border-color: #0066FF;
+}
+
+.device-card.drag-over::after {
+    content: "Drop files here";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: #0066FF;
+    background: #FFFFFF;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.device-card.drag-over {
+    border-color: #0066FF;
+    background: #007AFF10;
+    transform: scale(1.1);
+}
+
+.device-icon {
+    margin-bottom: 1rem;
+}
+
+.device-icon .device-mobile {
+    width: 64px;
+    height: auto;
+}
+
+.device-icon .device-ipad {
+    width: 64px;
+    height: auto;
+}
+
+.device-icon .device-desktop {
+    width: 64px;
+    height: auto;
+}
+
+.device-name {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #FFFFFF20;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: #1A1A1A;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 576px;
+    animation: modalSlideIn 0.3s;
+}
+
+@keyframes modalSlideIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+.modal-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #8A8A8F50;
+    display: flex;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.modal-body {
+    padding: 1.25rem;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #000000;
+    border-radius: 0.75rem;
+}
+
+.file-icon .file {
+    width: 3rem;
+    height: auto;
+}
+
+.file-details {
+    flex: 1;
+}
+
+.file-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    word-break: break-word;
+    color: #FFFFFF;
+}
+
+.file-size {
+    font-size: 0.875rem;
+    color: #8A8A8F;
+}
+
+.sender-info {
+    font-size: 0.875rem;
+    color: #8A8A8F;
+    margin-top: 4px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.progress-container {
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #323232;
+    border-radius: 500px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #0066FF;
+    border-radius: 500px;
+    transition: width 0.3s;
+    width: 0%;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.progress-percent {
+    font-weight: 500;
+    color: #8A8A8F;
+}
+
+.progress-speed {
+    color: #8A8A8F;
+}
+
+.progress-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: #0066FF;
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background: #0052CC;
+}
+
+.btn-secondary {
+    background: #323232;
+    color: #FFFFFF;
+}
+
+.btn-secondary:hover {
+    background: #252525;
+}
+
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.toast {
+    background: #80FFB7;
+    color: #136C32;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    animation: toastSlideIn 0.3s;
+}
+
+@keyframes toastSlideIn {
+
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.toast.error {
+    background: #FF8080;
+    color: #651A1A;
+
+}
+
+.toast.warning {
+    background: #FFDD80;
+    color: #806000;
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        padding: 1rem;
+    }
+
+    .modal-content {
+        margin: 1rem;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+}
+
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+.fade-in {
+    animation: fadeInUp 0.5s;
+}
+
+@keyframes fadeInUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .device-info {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .devices-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 350px) {
+
+    .toast-container {
+        right: 1px;
+    }
+
+}

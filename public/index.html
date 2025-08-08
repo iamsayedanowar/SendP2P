@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="icons/airdrop.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="manifest" href="icons/manifest.json">
+    <meta name="keywords" content="SendP2P">
+    <meta name="description" content="SendP2P - Transfer Files Cross-Platform. No Setup, No Signup.">
+    <title>SendP2P - Transfer Files Cross-Platform. No Setup, No Signup.</title>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>SendP2P</h1>
+            </div>
+            <div class="device-info">
+                <input type="text" id="device-name" placeholder="Your device name" maxlength="20">
+                <div class="status" id="connection-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            <div class="empty-state" id="empty-state">
+                <img src="icons/devices-exclamation.svg" class="devices-exclamation">
+                <h2>No devices found</h2>
+                <p>Open SendP2P on other devices to start sharing files</p>
+                <div class="tips">
+                    <p>💡 Make sure devices are on the same network</p>
+                </div>
+            </div>
+            <div class="devices-grid" id="devices-grid" style="display: none;"></div>
+        </main>
+        <input type="file" id="file-input" multiple style="display: none;">
+        <div class="modal" id="progress-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="progress-title">Sending File</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <img src="icons/file.svg" class="file">
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" id="progress-filename"></div>
+                            <div class="file-size" id="progress-filesize"></div>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progress-percent" class="progress-percent">0%</span>
+                            <span id="progress-speed" class="progress-speed"></span>
+                        </div>
+                    </div>
+                    <div class="progress-actions">
+                        <button class="btn btn-secondary" id="cancel-transfer">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="receive-modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Incoming File</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <img src="icons/file.svg" class="file">
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" id="receive-filename"></div>
+                            <div class="file-size" id="receive-filesize"></div>
+                            <div class="sender-info">
+                                From: <span id="sender-name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" id="decline-file">Decline</button>
+                        <button class="btn btn-primary" id="accept-file">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="toast-container" id="toast-container"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
