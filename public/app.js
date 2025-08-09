@@ -174,6 +174,7 @@ class SendP2P {
     }
 
     updatePeersList(peers, roomInfo) {
+        this.clearAllDeviceStatuses();
         this.peers.clear();
         if (peers.length === 0) {
             this.elements.emptyState.style.display = 'block';
@@ -204,9 +205,9 @@ class SendP2P {
             }
         }
         card.innerHTML = `
-            <div class="device-icon">${deviceIcon}</div>
-            <div class="device-name">${peer.name}</div>
-        `;
+        <div class="device-icon">${deviceIcon}</div>
+        <div class="device-name">${peer.name}</div>
+        <div class="device-status" id="status-${peer.peerId}"></div>`;
         card.addEventListener('click', () => {
             this.selectedPeer = peer.peerId;
             this.elements.fileInput.click();
@@ -230,6 +231,33 @@ class SendP2P {
         this.elements.devicesGrid.appendChild(card);
     }
 
+    setDeviceStatus(peerId, status, text = '') {
+        const statusElement = document.getElementById(`status-${peerId}`);
+        if (statusElement) {
+            statusElement.className = `device-status ${status}`;
+            if (status === 'waiting') {
+                statusElement.textContent = text || 'waiting';
+            } else {
+                statusElement.textContent = text;
+            }
+        }
+    }
+
+    clearDeviceStatus(peerId) {
+        const statusElement = document.getElementById(`status-${peerId}`);
+        if (statusElement) {
+            statusElement.className = 'device-status';
+            statusElement.textContent = '';
+        }
+    }
+
+    clearAllDeviceStatuses() {
+        document.querySelectorAll('.device-status').forEach(status => {
+            status.className = 'device-status';
+            status.textContent = '';
+        });
+    }
+
     setDeviceName(name) {
         const deviceName = name?.trim() || `Device-${this.peerId?.slice(0, 6) || 'Unknown'}`;
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
@@ -242,22 +270,30 @@ class SendP2P {
 
     async sendFiles(files, targetPeerId) {
         if (files.length === 0) return;
-        const file = files[0];
-        const fileInfo = {
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            id: this.generateId()
-        };
-        this.ws.send(JSON.stringify({
-            type: 'file-request',
-            to: targetPeerId,
-            fileInfo: fileInfo
-        }));
-        this.pendingFiles.set(fileInfo.id, { file, targetPeerId });
+        try {
+            this.setDeviceStatus(targetPeerId, 'waiting', 'waiting');
+            const file = files[0];
+            const fileInfo = {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                id: this.generateId()
+            };
+            this.ws.send(JSON.stringify({
+                type: 'file-request',
+                to: targetPeerId,
+                fileInfo: fileInfo
+            }));
+            this.pendingFiles.set(fileInfo.id, { file, targetPeerId });
+        } catch (error) {
+            this.clearDeviceStatus(targetPeerId);
+            console.error('Error sending file request:', error);
+            this.showToast('Failed to send file request', 'error');
+        }
     }
 
     handleFileResponse(fromPeerId, accepted, fileInfo) {
+        this.clearDeviceStatus(fromPeerId);
         const pendingFile = this.pendingFiles.get(fileInfo.id);
         if (!pendingFile) return;
         if (accepted) {
@@ -285,6 +321,7 @@ class SendP2P {
             this.receiveTimeout = null;
         }
         if (this.currentFileRequest) {
+            this.clearDeviceStatus(this.currentFileRequest.fromPeerId);
             this.ws.send(JSON.stringify({
                 type: 'file-response',
                 to: this.currentFileRequest.fromPeerId,
@@ -292,6 +329,7 @@ class SendP2P {
                 fileInfo: this.currentFileRequest.fileInfo
             }));
             this.establishConnection(this.currentFileRequest.fromPeerId, null, this.currentFileRequest.fileInfo, false);
+            this.currentFileRequest = null;
         }
         this.elements.receiveModal.style.display = 'none';
     }
@@ -302,12 +340,14 @@ class SendP2P {
             this.receiveTimeout = null;
         }
         if (this.currentFileRequest) {
+            this.clearDeviceStatus(this.currentFileRequest.fromPeerId);
             this.ws.send(JSON.stringify({
                 type: 'file-response',
                 to: this.currentFileRequest.fromPeerId,
                 accepted: false,
                 fileInfo: this.currentFileRequest.fileInfo
             }));
+            this.currentFileRequest = null;
         }
         this.elements.receiveModal.style.display = 'none';
     }
