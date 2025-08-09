@@ -24,6 +24,14 @@ A web-based peer-to-peer file sharing application that allows users to share fil
    npm start
    ```
 
+## Features
+
+- **Real-time Device Discovery:** Automatically discovers devices on the same network.
+- **No File Storage:** Files never touch the server - true peer-to-peer sharing.
+- **Drag & Drop Support:** Easy file sharing with drag and drop interface.
+- **Transfer Progress:** Real-time progress indicators for file transfers.
+- **Mobile Friendly:** Works on both desktop and mobile devices.
+
 ## Tech Stack
 
 **Front-End :** HTML, CSS, JavaScript
