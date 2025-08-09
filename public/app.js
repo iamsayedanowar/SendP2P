@@ -271,6 +271,7 @@ class SendP2P {
     async sendFiles(files, targetPeerId) {
         if (files.length === 0) return;
         try {
+            this.showToast('Keep your device awake during file transfer', 'warning');
             this.setDeviceStatus(targetPeerId, 'waiting', 'waiting');
             const file = files[0];
             const fileInfo = {
@@ -322,6 +323,7 @@ class SendP2P {
         }
         if (this.currentFileRequest) {
             this.clearDeviceStatus(this.currentFileRequest.fromPeerId);
+            this.showToast('Keep your device awake during file transfer', 'warning');
             this.ws.send(JSON.stringify({
                 type: 'file-response',
                 to: this.currentFileRequest.fromPeerId,
