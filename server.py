@@ -22,7 +22,7 @@ def get_private_ip():
 if __name__ == "__main__":
     ip = get_private_ip()
     if ip:
-        print(f"Server Running On: http://{ip}:{port}")
+        print(f"Server Running On: http://{ip}:{port}\n")
     else:
         print("Could not detect local IPv4 address.")
     try:
